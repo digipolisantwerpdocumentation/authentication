@@ -150,5 +150,54 @@ Voornamelijk omwille van onderstaande redenen:
 + Access_tokens die zijn aangemaakt met de implicit/token flow zijn slechts 2 uur gelding en kunnen niet verlengd worden.
 + Aangezien de client_secret niet gebruikt wordt om een access_token aan te vragen is dit OAuth2 profiel vatbaarder voor security issues.
 
+## Uitloggen
+
+## De gebruiker uitloggen
+
+De OAuth2 authorizatie server bevat ook de mogelijkheid om gebruikers centraal te laten uitloggen.
+
+Om dit te bereiken moet je de gebruiker redirecten naar de "/logout/redirect/encrypted" endpoint van de OAuth2 authorizatie server.
+
+| Parameter | Verplicht | Omschrijving |
+| :---         |     :---:      |  :---   |
+| client_id     | true       | De client_id die je kan terugvinden bij uw applicatie in de API store.
+| service     | true       | De service waarmee de gebruiker zich geauthenticeerd heeft. Dit kan 'astad.aprofiel.v1' of 'astad.mprofiel.v1' zijn.      |
 
 
+
+
+## Logout flow
+
+In order to log out a call to /logout/redirect/encrypted needs to be made with these query string parameters:
+
+* client_id	(client_id of the API Store contract)
+* service (the service to log out, e.g. "astad.aprofiel.v1")
+* data (additional parameters encrypted, see below)
+
+The structure of the data object is as folows:
+
+* user_id (the id of the user to log out)
+* access_token (the access token of the user to log out)
+* redirect_uri (the uri to redirect to at the end of the logout flow)
+
+The data object must be encrypted. This can be done using the **encrypt** method of the [logout.js](/app/utils/logout.js) file, using the client secret as the password.
+
+After a call to the /logout/redirect/encrypted endpoint a redirect logout flow will initiate and will terminate at the **redirect_uri** if all went well.
+
+### Logout events
+
+When a user is logged out an event is published on the Event Handler.
+You can subscribe to these events in the **OAuth** namespace:
+
+**astad.aprofiel.v1.loggedout** in case the user was logged in with AProfiel.
+**astad.mprofiel.v1.loggedout** in case the user was logged in with MProfiel.
+
+The event payload is:
+
+```
+{
+  user: <user id>,
+  service: <the service the user was logged in>,
+  timestamp: <ISO date and time>
+}
+```
