@@ -152,47 +152,35 @@ Voornamelijk omwille van onderstaande redenen:
 
 ## Uitloggen
 
-## De gebruiker uitloggen
+## Het uitloggen van een gebruiker initiëren vanuit uw applicatie
 
 De OAuth2 authorizatie server bevat ook de mogelijkheid om gebruikers centraal te laten uitloggen.
 
-Om dit te bereiken moet je de gebruiker redirecten naar de "/logout/redirect/encrypted" endpoint van de OAuth2 authorizatie server.
+Om dit te bereiken moet je de gebruiker redirecten naar de "/logout/redirect/encrypted" endpoint van de OAuth2 authorizatie server met onderstaande querystring parameters.
 
 | Parameter | Verplicht | Omschrijving |
 | :---         |     :---:      |  :---   |
 | client_id     | true       | De client_id die je kan terugvinden bij uw applicatie in de API store.
 | service     | true       | De service waarmee de gebruiker zich geauthenticeerd heeft. Dit kan 'astad.aprofiel.v1' of 'astad.mprofiel.v1' zijn.      |
+| data     | true       | Een object met extra data ivm het uitloggen. Deze data is geencrypteerd volgens sha1 op basis van de client_secret.      |
+| data.user_id     | true       | De id van de gebruiker die wenst uit te loggen      |
+| data.access_token     | true       | Het access_token van de gebruiker die wenst uit te loggen      |
+| data.redirect_uri     | true       | De url op uw applicatie naar waar de gebruiker geredirect moet worden nadat hij uitgelogd is. Het domein van deze redirect_uri moet overeenkomen met het domein van de redirect_uri(callback) die je in de api-store hebt ingegeven voor het aanlogproces |
 
 
+Naast het centraal uitloggen van de gebruiker is het ook de bedoeling om de sessie in uw applicatie te termineren.
 
 
-## Logout flow
+### De gebruiker in uw applicatie uitloggen wanneer deze in een andere applicatie uitgelogd is
 
-In order to log out a call to /logout/redirect/encrypted needs to be made with these query string parameters:
+Telkens een gebruiker via bovenstaande OAuth applicatie uitgelogd is zal er een event op de EventHandler gepublished worden.
 
-* client_id	(client_id of the API Store contract)
-* service (the service to log out, e.g. "astad.aprofiel.v1")
-* data (additional parameters encrypted, see below)
+| Namespace | Event | Omschrijving |
+| :---         |     :---:      |  :---   |
+| OAuth     | astad.aprofiel.v1.loggedout | Waneer een aprofiel gebruiker uitgelogd is.
+| OAuth     | astad.mprofiel.v1.loggedout| Waneer een mprofiel gebruiker uitgelogd is.
 
-The structure of the data object is as folows:
-
-* user_id (the id of the user to log out)
-* access_token (the access token of the user to log out)
-* redirect_uri (the uri to redirect to at the end of the logout flow)
-
-The data object must be encrypted. This can be done using the **encrypt** method of the [logout.js](/app/utils/logout.js) file, using the client secret as the password.
-
-After a call to the /logout/redirect/encrypted endpoint a redirect logout flow will initiate and will terminate at the **redirect_uri** if all went well.
-
-### Logout events
-
-When a user is logged out an event is published on the Event Handler.
-You can subscribe to these events in the **OAuth** namespace:
-
-**astad.aprofiel.v1.loggedout** in case the user was logged in with AProfiel.
-**astad.mprofiel.v1.loggedout** in case the user was logged in with MProfiel.
-
-The event payload is:
+Het bericht ziet er als volgt uit:
 
 ```
 {
