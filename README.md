@@ -22,6 +22,7 @@
   - [Uitloggen](#uitloggen)
   - [Het uitloggen van een gebruiker initiëren vanuit uw applicatie](#het-uitloggen-van-een-gebruiker-initi%C3%ABren-vanuit-uw-applicatie)
   - [De gebruiker in uw applicatie uitloggen wanneer deze in een andere applicatie uitgelogd is](#de-gebruiker-in-uw-applicatie-uitloggen-wanneer-deze-in-een-andere-applicatie-uitgelogd-is)
+- [SAML](#saml)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -195,3 +196,11 @@ Het bericht ziet er als volgt uit:
   timestamp: <ISO date and time>
 }
 ```
+
+
+
+# SAML
+
+Voor alle (web)applicaties raden we aan om gebruikt te maken van OAuth2. 
+
+Indien uw applicatie toch gebruikt maakt van SAML kan dit alsnog opgezet worden. Gelieve hiervoor contact op te nemen met het APIe-team via Zendesk.
