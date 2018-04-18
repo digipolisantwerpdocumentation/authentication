@@ -19,6 +19,9 @@
       - [2) access_token bekomen](#2-access_token-bekomen)
       - [3) API oproepen](#3-api-oproepen)
     - [OAuth2 profiel: implicit](#oauth2-profiel-implicit)
+  - [Uitloggen](#uitloggen)
+  - [Het uitloggen van een gebruiker initiëren vanuit uw applicatie](#het-uitloggen-van-een-gebruiker-initi%C3%ABren-vanuit-uw-applicatie)
+  - [De gebruiker in uw applicatie uitloggen wanneer deze in een andere applicatie uitgelogd is](#de-gebruiker-in-uw-applicatie-uitloggen-wanneer-deze-in-een-andere-applicatie-uitgelogd-is)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -171,12 +174,15 @@ Om dit te bereiken moet je de gebruiker redirecten naar de "/logout/redirect/enc
 Naast het centraal uitloggen van de gebruiker is het ook de bedoeling om de sessie in uw applicatie te termineren.
 
 
-### De gebruiker in uw applicatie uitloggen wanneer deze in een andere applicatie uitgelogd is
+
+
+
+## De gebruiker in uw applicatie uitloggen wanneer deze in een andere applicatie uitgelogd is
 
 Telkens een gebruiker via bovenstaande OAuth applicatie uitgelogd is zal er een event op de EventHandler gepublished worden.
 
 | Namespace | Event | Omschrijving |
-| :---         |     :---:      |  :---   |
+| :---         |     :---      |  :---   |
 | OAuth     | astad.aprofiel.v1.loggedout | Waneer een aprofiel gebruiker uitgelogd is.
 | OAuth     | astad.mprofiel.v1.loggedout| Waneer een mprofiel gebruiker uitgelogd is.
 
