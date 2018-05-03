@@ -20,8 +20,8 @@
       - [3) API oproepen](#3-api-oproepen)
     - [OAuth2 profiel: implicit](#oauth2-profiel-implicit)
   - [Uitloggen](#uitloggen)
-  - [Het uitloggen van een gebruiker initiëren vanuit uw applicatie](#het-uitloggen-van-een-gebruiker-initi%C3%ABren-vanuit-uw-applicatie)
-  - [De gebruiker in uw applicatie uitloggen wanneer deze in een andere applicatie uitgelogd is](#de-gebruiker-in-uw-applicatie-uitloggen-wanneer-deze-in-een-andere-applicatie-uitgelogd-is)
+  - [Het uitloggen van een gebruiker initiëren vanuit jouw applicatie](#het-uitloggen-van-een-gebruiker-initi%C3%ABren-vanuit-jouw-applicatie)
+  - [De gebruiker in jouw applicatie uitloggen wanneer deze in een andere applicatie uitgelogd is](#de-gebruiker-in-jouw-applicatie-uitloggen-wanneer-deze-in-een-andere-applicatie-uitgelogd-is)
 - [SAML](#saml)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -36,24 +36,24 @@ Versie   | Auteur                 | Datum      | Opmerkingen
 
 ## Introductie
 
-Applications kunnen OAuth2 gebruiken om a/mprofielen te laten authenticeren.
+Applicaties kunnen de OAuth2 authorizatie server gebruiken om a/m-profielen te laten authenticeren(authorization_code). Daarnaast ondersteunen we ook de mogelijkheid om applicaties te authenticeren(client_credentials). 
 
 ## Registratie van de applicatie
 
-Op de API store kan je uw eigen applicatie registreren. Deze dien je aan te maken in de organisatie waartoe de applicatie behoort.
+Op de API store kan je jouw eigen applicatie registreren. Deze dien je aan te maken in de organisatie waartoe de applicatie behoort.
 
-Indien er nog geen organisatie is dien je deze ook aan te maken.
+Indien je jouw applicatie niet kan onderbrengen in een bestaande organisatie kan je zelf ook één aanmaken.
 
 Voor iedere omgeving is er een aparte omgeving opgezet:
 * https://api-store-o.antwerpen.be
 * https://api-store-a.antwerpen.be
 * https://api-store.antwerpen.be
 
-Nadat je uw applicatie aangemaakt heb kan je een contract aanmaken met de A-Profiel en/of M-Profiel API.
+Nadat je jouw applicatie aangemaakt hebt kan je een contract aanmaken met de A-Profiel en/of M-Profiel API.
 
-De OAuth2 client_id en client_secret kan je bij de detail gegevens van uw applicatie vinden. Afhankelijk van de API is er nog een goedkeuring nodig van de beheerder van de API. Deze goedkeuringsflow verloopt gehaal automatisch.
+De OAuth2 client_id en client_secret kan je bij de detail gegevens van jouw applicatie vinden. Afhankelijk van de API is er nog een goedkeuring nodig van de beheerder van de API. Deze goedkeuringsflow verloopt geheel automatisch.
 
-De OAuth2 tokens zijn geldig voor alle OAuth2 services waarvoor uw applicatie een contract heeft.
+De OAuth2 tokens zijn geldig voor alle OAuth2 services waarvoor jouw applicatie een contract heeft.
 
 ## Authenticeren als een applicatie
 
@@ -100,15 +100,15 @@ response_type=code
 | Parameter | Verplicht | Omschrijving |
 | :---         |     :---:      |  :---   |
 | response_type   | true     | Voor de authorization_code flow dien je hier 'code' te gebruiken .    |
-| client_id     | true       | De client_id die je kan terugvinden bij uw applicatie in de API store.
+| client_id     | true       | De client_id die je kan terugvinden bij jouw applicatie in de API store.
 | scope     | true       | Een door comma's gescheiden lijst van scopes die de gebruiker dient goed te keuren.      |
-| redirect_uri     | true       | De redirect_uri die overeenkomt met diegene die is ingegeven in de API store voor uw applicatie.
+| redirect_uri     | true       | De redirect_uri die overeenkomt met diegene die is ingegeven in de API store voor jouw applicatie.
 | redirect_uri_lng     | false       | Als deze waarde op 'true' staat zal de redirect_uri een extra parameter 'lng' hebben wanneer de gebruiker de OAuth2 authorize applicatie verlaat. De waarde voor de 'lng' querystring parameter zal overeenkomen met de taal op de Authorize applicatie. |
 | service     | true       | De service die je wil gebruiker om een gebruiker te authenticeren. Dit kan 'astad.aprofiel.v1' of 'astad.mprofiel.v1' zijn.    |
-| state     | false      | We raden aan om deze parameter te voorzien in de redirect naar de authorize applicatie met een referentie naar de sessie van de gebruiker. Aangezien de parameter opnieuw zal worden meegeven in de redirect_uri, kan uw applicatie valideren of de Authorize flow gestart is vanuit uw applicatie.     |
+| state     | false      | We raden aan om deze parameter te voorzien in de redirect naar de authorize applicatie met een referentie naar de sessie van de gebruiker. Aangezien de parameter opnieuw zal worden meegeven in de redirect_uri, kan jouw applicatie valideren of de Authorize flow gestart is vanuit jouw applicatie.     |
 | lng     | false       | De taal voor de authorize applicatie. Standaard staat deze op 'nl'. Beschikbare talen zijn nl, fr, en, de.     |
 | force_auth     | false       | Als een gebruiker al een SSO sessie heeft op de achterliggende IDP kan je met deze parameter aangeven dat je de gebruiker verplicht opnieuw wil laten aanmelden.     |
-| save_consent | false | Als je deze op 'true' zet, zal de authorize applicatie de gegeven consent onthouden voor uw applicatie/gebruiker/scopes. |
+| save_consent | false | Als je deze op 'true' zet, zal de authorize applicatie de gegeven consent onthouden voor jouw applicatie/gebruiker/scopes. |
 
 
 
@@ -156,7 +156,7 @@ Voornamelijk omwille van onderstaande redenen:
 
 ## Uitloggen
 
-## Het uitloggen van een gebruiker initiëren vanuit uw applicatie
+## Het uitloggen van een gebruiker initiëren vanuit jouw applicatie
 
 De OAuth2 authorizatie server bevat ook de mogelijkheid om gebruikers centraal te laten uitloggen.
 
@@ -164,21 +164,20 @@ Om dit te bereiken moet je de gebruiker redirecten naar de "/logout/redirect/enc
 
 | Parameter | Verplicht | Omschrijving |
 | :---         |     :---:      |  :---   |
-| client_id     | true       | De client_id die je kan terugvinden bij uw applicatie in de API store.
+| client_id     | true       | De client_id die je kan terugvinden bij jouw applicatie in de API store.
 | service     | true       | De service waarmee de gebruiker zich geauthenticeerd heeft. Dit kan 'astad.aprofiel.v1' of 'astad.mprofiel.v1' zijn.      |
 | data     | true       | Een object met extra data ivm het uitloggen. Deze data is geencrypteerd volgens sha1 op basis van de client_secret.      |
 | data.user_id     | true       | De id van de gebruiker die wenst uit te loggen      |
 | data.access_token     | true       | Het access_token van de gebruiker die wenst uit te loggen      |
-| data.redirect_uri     | true       | De url op uw applicatie naar waar de gebruiker geredirect moet worden nadat hij uitgelogd is. Het domein van deze redirect_uri moet overeenkomen met het domein van de redirect_uri(callback) die je in de api-store hebt ingegeven voor het aanlogproces |
+| data.redirect_uri     | true       | De url op jouw applicatie naar waar de gebruiker geredirect moet worden nadat hij uitgelogd is. Het domein van deze redirect_uri moet overeenkomen met het domein van de redirect_uri(callback) die je in de api-store hebt ingegeven voor het aanlogproces |
 
 
-Naast het centraal uitloggen van de gebruiker is het ook de bedoeling om de sessie in uw applicatie te termineren.
+Alvorens de gebruiker centraal uit te loggen (via bovenstaande redirect) moet je ook nog de gebruiker sessie in jouw applicatie beëindigen.
 
 
 
 
-
-## De gebruiker in uw applicatie uitloggen wanneer deze in een andere applicatie uitgelogd is
+## De gebruiker in jouw applicatie uitloggen wanneer deze in een andere applicatie uitgelogd is
 
 Telkens een gebruiker via bovenstaande OAuth applicatie uitgelogd is zal er een event op de EventHandler gepublished worden.
 
@@ -192,8 +191,8 @@ Het bericht ziet er als volgt uit:
 ```
 {
   user: <user id>,
-  service: <the service the user was logged in>,
-  timestamp: <ISO date and time>
+  service: <the service waarmee de gebruiker aangemeld was>,
+  timestamp: <ISO datum and tijd>
 }
 ```
 
@@ -203,4 +202,4 @@ Het bericht ziet er als volgt uit:
 
 Voor alle (web)applicaties raden we aan om gebruikt te maken van OAuth2. 
 
-Indien uw applicatie toch gebruikt maakt van SAML kan dit alsnog opgezet worden. Gelieve hiervoor contact op te nemen met het APIe-team via Zendesk.
+Indien jouw applicatie toch gebruikt maakt van SAML kan dit alsnog opgezet worden. Gelieve hiervoor contact op te nemen met het APIe-team via Zendesk.
