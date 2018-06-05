@@ -15,7 +15,7 @@
   - [Authenticeren als een gebruiker](#authenticeren-als-een-gebruiker)
     - [OAuth2 authorizatie server](#oauth2-authorizatie-server)
     - [OAuth2 profiel: authorization_code](#oauth2-profiel-authorization_code)
-      - [1) de gebruiker naar de OAuth2 authorize applicatie redirecten](#1-de-gebruiker-naar-de-oauth2-authorize-applicatie-redirecten)
+      - [1) de gebruiker naar de OAuth2 authorizatie applicatie redirecten](#1-de-gebruiker-naar-de-oauth2-authorizatie-applicatie-redirecten)
       - [2) access_token bekomen](#2-access_token-bekomen)
       - [3) API oproepen](#3-api-oproepen)
     - [OAuth2 profiel: implicit](#oauth2-profiel-implicit)
@@ -80,12 +80,12 @@ curl -v -H "Authorization: Bearer {{ACCESS_TOKEN_FROM_PREVIOUS_STEP}}" 'https://
 
 ### OAuth2 authorizatie server
 
-De OAuth2 authorize server kan je op volgende locatie vinden:
+De OAuth2 authorizatie server kan je op volgende locatie vinden:
 * https://api-oauth2-o.antwerpen.be
 * https://api-oauth2-a.antwerpen.be
 * https://api-oauth2.antwerpen.be
 
-Een voorbeeld redirect naar de authorizatie ziet er zo uit:
+Een voorbeeld redirect naar de authorizatie applicatie ziet er zo uit:
 ```
 https://api-oauth2.antwerpen.be/v1/authorize?
 response_type=code
@@ -101,14 +101,14 @@ response_type=code
 | :---         |     :---:      |  :---   |
 | response_type   | true     | Voor de authorization_code flow dien je hier 'code' te gebruiken .    |
 | client_id     | true       | De client_id die je kan terugvinden bij jouw applicatie in de API store.
-| scope     | true       | Een door comma's gescheiden lijst van scopes die de gebruiker dient goed te keuren.      |
+| scope     | true       | Een door komma's gescheiden lijst van scopes die de gebruiker dient goed te keuren.      |
 | redirect_uri     | true       | De redirect_uri die overeenkomt met diegene die is ingegeven in de API store voor jouw applicatie.
-| redirect_uri_lng     | false       | Als deze waarde op 'true' staat zal de redirect_uri een extra parameter 'lng' hebben wanneer de gebruiker de OAuth2 authorize applicatie verlaat. De waarde voor de 'lng' querystring parameter zal overeenkomen met de taal op de Authorize applicatie. |
-| service     | true       | De service die je wil gebruiker om een gebruiker te authenticeren. Dit kan 'astad.aprofiel.v1' of 'astad.mprofiel.v1' zijn.    |
-| state     | false      | We raden aan om deze parameter te voorzien in de redirect naar de authorize applicatie met een referentie naar de sessie van de gebruiker. Aangezien de parameter opnieuw zal worden meegeven in de redirect_uri, kan jouw applicatie valideren of de Authorize flow gestart is vanuit jouw applicatie.     |
-| lng     | false       | De taal voor de authorize applicatie. Standaard staat deze op 'nl'. Beschikbare talen zijn nl, fr, en, de.     |
-| force_auth     | false       | Als een gebruiker al een SSO sessie heeft op de achterliggende IDP kan je met deze parameter aangeven dat je de gebruiker verplicht opnieuw wil laten aanmelden.     |
-| save_consent | false | Als je deze op 'true' zet, zal de authorize applicatie de gegeven consent onthouden voor jouw applicatie/gebruiker/scopes. |
+| redirect_uri_lng     | false       | Als deze waarde op 'true' staat zal de redirect_uri een extra parameter 'lng' hebben wanneer de gebruiker de OAuth2 authorizatie applicatie verlaat. De waarde voor de 'lng' querystring parameter zal overeenkomen met de taal op de authorizatie applicatie. |
+| service     | true       | De service die je wil gebruiken om een gebruiker te authenticeren. Dit kan 'astad.aprofiel.v1' of 'astad.mprofiel.v1' zijn.    |
+| state     | false      | We raden aan om deze parameter te voorzien in de redirect naar de authorizatie applicatie met een referentie naar de sessie van de gebruiker. Aangezien de parameter opnieuw zal worden meegeven in de redirect_uri, kan jouw applicatie valideren of de autorisatie flow gestart is vanuit jouw applicatie.     |
+| lng     | false       | De taal voor de authorizatie applicatie. Standaard staat deze op 'nl'. Beschikbare talen zijn nl, fr, en, de.     |
+| force_auth     | false       | Als een gebruiker al een SSO (Single Sign-On) sessie heeft op de achterliggende IDP (IDentity Provider) kan je met deze parameter aangeven dat je de gebruiker verplicht opnieuw wil laten aanmelden.     |
+| save_consent | false | Als je deze op 'true' zet, zal de authorizatie applicatie de gegeven consent onthouden voor jouw applicatie/gebruiker/scopes. |
 
 
 
@@ -123,9 +123,9 @@ Als uw applicatie met aprofielen of medewerkers wil laten inloggen en gegevens o
 Technische implementatie details en een werkende NodeJS demo applicatie kan je hier vinden:
 https://github.com/digipolisantwerp/demo-oauth2-consumer_app_nodejs
 
-#### 1) de gebruiker naar de OAuth2 authorize applicatie redirecten
+#### 1) de gebruiker naar de OAuth2 authorizatie applicatie redirecten
 
-Een authorization_code kan je bekomen door de gebruiker naar de OAuth2 Authorize applicatie te redirecten.
+Een authorization_code kan je bekomen door de gebruiker naar de OAuth2 authorizatie applicatie te redirecten.
 
 
 #### 2) access_token bekomen
@@ -162,13 +162,13 @@ Voornamelijk omwille van onderstaande redenen:
 
 De OAuth2 authorizatie server bevat ook de mogelijkheid om gebruikers centraal te laten uitloggen.
 
-Om dit te bereiken moet je de gebruiker redirecten naar de "/logout/redirect/encrypted" endpoint van de OAuth2 authorizatie server met onderstaande querystring parameters.
+Om dit te bereiken moet je de gebruiker redirecten naar het "/logout/redirect/encrypted" endpoint van de OAuth2 authorizatie server met onderstaande querystring parameters.
 
 | Parameter | Verplicht | Omschrijving |
 | :---         |     :---:      |  :---   |
 | client_id     | true       | De client_id die je kan terugvinden bij jouw applicatie in de API store.
 | service     | true       | De service waarmee de gebruiker zich geauthenticeerd heeft. Dit kan 'astad.aprofiel.v1' of 'astad.mprofiel.v1' zijn.      |
-| data     | true       | Een object met extra data ivm het uitloggen. Deze data is geencrypteerd volgens sha1 op basis van de client_secret.      |
+| data     | true       | Een object met extra data ivm het uitloggen. Deze data is geëncrypteerd volgens sha1 op basis van de client_secret.      |
 | data.user_id     | true       | De id van de gebruiker die wenst uit te loggen      |
 | data.access_token     | true       | Het access_token van de gebruiker die wenst uit te loggen      |
 | data.redirect_uri     | true       | De url op jouw applicatie naar waar de gebruiker geredirect moet worden nadat hij uitgelogd is. Het domein van deze redirect_uri moet overeenkomen met het domein van de redirect_uri(callback) die je in de api-store hebt ingegeven voor het aanlogproces |
@@ -193,8 +193,8 @@ Het bericht ziet er als volgt uit:
 ```
 {
   user: <user id>,
-  service: <the service waarmee de gebruiker aangemeld was>,
-  timestamp: <ISO datum and tijd>
+  service: <de service waarmee de gebruiker aangemeld was>,
+  timestamp: <ISO datum en tijd>
 }
 ```
 
