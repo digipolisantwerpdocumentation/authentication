@@ -135,6 +135,8 @@ Nadat de gebruiker is ingelogd en zijn goedkeuring(consent) heeft gegeven zal de
 Deze redirect_uri bevat een *code* querystring parameter als de authenticatie succesvol is. Bijvoorbeeld:
 https://domain.com/callback?code=123
 
+Optioneel worden in deze redirect_uri ook de querystring parameters *lng* en *state* teruggegeven.
+
 *Request:*
 
 curl -X POST -d "client_id={{CLIENT_ID}}&client_secret={{CLIENT_SECRET}}&code={{CODE_FROM_PREV_STEP}}&grant_type=authorization_code" https://api-gw-p.antwerpen.be/org/service/v1/oauth2/token
