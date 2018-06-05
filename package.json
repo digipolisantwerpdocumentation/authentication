@@ -1,0 +1,23 @@
+{
+  "name": "authentication",
+  "version": "1.0.0",
+  "description": "<!-- START doctoc generated TOC please keep comment here to allow auto update --> <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->",
+  "main": "index.js",
+  "devDependencies": {
+    "doctoc": "1.3.1"
+  },
+  "scripts": {
+    "doctoc": "node_modules/.bin/doctoc README.md",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/digipolisantwerpdocumentation/authentication.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/digipolisantwerpdocumentation/authentication/issues"
+  },
+  "homepage": "https://github.com/digipolisantwerpdocumentation/authentication#readme"
+}
