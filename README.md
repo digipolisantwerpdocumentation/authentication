@@ -32,6 +32,12 @@
 
 Applicaties kunnen de OAuth2 authorizatie server gebruiken om a/m-profielen te laten authenticeren(authorization_code). Daarnaast ondersteunen we ook de mogelijkheid om applicaties te authenticeren(client_credentials). 
 
+## SAML
+
+Voor alle (web)applicaties raden we aan om gebruikt te maken van OAuth2. 
+
+Indien jouw applicatie toch gebruikt maakt van SAML kan dit alsnog opgezet worden. Gelieve hiervoor contact op te nemen met het APIe-team via Zendesk.
+
 ## Registratie van de applicatie
 
 Op de API store kan je jouw eigen applicatie registreren. Deze dien je aan te maken in de organisatie waartoe de applicatie behoort.
@@ -191,11 +197,3 @@ Het bericht ziet er als volgt uit:
   timestamp: <ISO datum en tijd>
 }
 ```
-
-
-
-# SAML
-
-Voor alle (web)applicaties raden we aan om gebruikt te maken van OAuth2. 
-
-Indien jouw applicatie toch gebruikt maakt van SAML kan dit alsnog opgezet worden. Gelieve hiervoor contact op te nemen met het APIe-team via Zendesk.
