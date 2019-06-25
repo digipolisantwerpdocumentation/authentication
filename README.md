@@ -26,12 +26,6 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-# Document historiek
-
-Versie   | Auteur                 | Datum      | Opmerkingen
-------   | -------                | -----      | ------------
-1        | Dries Droesbeke | 13/06/2017 | Initial draft.
-
 # OAuth2
 
 ## Introductie
