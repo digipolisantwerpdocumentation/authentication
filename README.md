@@ -65,7 +65,7 @@ De OAuth2 tokens zijn geldig voor alle OAuth2 services waarvoor jouw applicatie 
 
 *Request:*
 
-curl -X POST -d "client_id={{CLIENT_ID}}&client_secret={{CLIENT_SECRET}}&grant_type=client_credentials" https://api-gw-p.antwerpen.be/org/service/v1/oauth2/token
+curl -X POST -d "client_id={{CLIENT_ID}}&client_secret={{CLIENT_SECRET}}&grant_type=client_credentials" https://api-gw-p.antwerpen.be/{org}/{service}/{version}/oauth2/token
 
 *Response:*
 
@@ -74,7 +74,7 @@ curl -X POST -d "client_id={{CLIENT_ID}}&client_secret={{CLIENT_SECRET}}&grant_t
 #### 2) API oproepen
 *Request:*
 
-curl -v -H "Authorization: Bearer {{ACCESS_TOKEN_FROM_PREVIOUS_STEP}}" 'https://api-gw-p.antwerpen.be/astad/aprofiel/v1/me'
+curl -v -H "Authorization: Bearer {{ACCESS_TOKEN_FROM_PREVIOUS_STEP}}" 'https://api-gw-p.antwerpen.be/{org}/{service}/{version}/me'
 
 ## Authenticeren als een gebruiker
 
@@ -139,13 +139,13 @@ Optioneel worden in deze redirect_uri ook de querystring parameters *lng* en *st
 
 *Request:*
 
-curl -X POST -d "client_id={{CLIENT_ID}}&client_secret={{CLIENT_SECRET}}&code={{CODE_FROM_PREV_STEP}}&grant_type=authorization_code" https://api-gw-p.antwerpen.be/org/service/v1/oauth2/token
+curl -X POST -d "client_id={{CLIENT_ID}}&client_secret={{CLIENT_SECRET}}&code={{CODE_FROM_PREV_STEP}}&grant_type=authorization_code" https://api-gw-p.antwerpen.be/{org}/{service}/{version}/oauth2/token
 
 *Response:*
 {"refresh_token":"66f0c43c27a94ad4aa2d7574cf7b4465","token_type":"bearer","access_token":"a2824fb10b2a44b2b6f1a4aba382630a","expires_in":7200}
 
 #### 3) API oproepen
-curl -v -H "Authorization: Bearer {{ACCESS_TOKEN_FROM_PREVIOUS_STEP}}" 'https://api-gw-p.antwerpen.be/org/service/v1/resource'
+curl -v -H "Authorization: Bearer {{ACCESS_TOKEN_FROM_PREVIOUS_STEP}}" 'https://api-gw-p.antwerpen.be/{org}/{service}/{version}/resource'
 
 
 ### OAuth2 profiel: implicit
