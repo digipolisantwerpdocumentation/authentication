@@ -13,6 +13,7 @@
       - [1) access_token ophalen](#1-access_token-ophalen)
       - [2) API oproepen](#2-api-oproepen)
   - [Authenticeren als een gebruiker](#authenticeren-als-een-gebruiker)
+      - [Authenticeren als een gebruiker met authenticatie 2.0](#authenticeren-als-een-gebruiker)
     - [OAuth2 authorizatie server](#oauth2-authorizatie-server)
     - [OAuth2 profiel: authorization_code](#oauth2-profiel-authorization_code)
       - [1) de gebruiker naar de OAuth2 authorizatie applicatie redirecten](#1-de-gebruiker-naar-de-oauth2-authorizatie-applicatie-redirecten)
@@ -30,11 +31,11 @@
 
 ## Introductie
 
-Applicaties kunnen de OAuth2 authorizatie server gebruiken om a/m-profielen te laten authenticeren(authorization_code). Daarnaast ondersteunen we ook de mogelijkheid om applicaties te authenticeren(client_credentials). 
+Applicaties kunnen de OAuth2 authorizatie server gebruiken om a/m-profielen te laten authenticeren(authorization_code). Daarnaast ondersteunen we ook de mogelijkheid om applicaties te authenticeren(client_credentials).
 
 ## SAML
 
-Voor alle (web)applicaties raden we aan om gebruikt te maken van OAuth2. 
+Voor alle (web)applicaties raden we aan om gebruikt te maken van OAuth2.
 
 Indien jouw applicatie toch gebruikt maakt van SAML kan dit alsnog opgezet worden. Gelieve hiervoor contact op te nemen met het APIe-team via Zendesk.
 
@@ -110,9 +111,79 @@ response_type=code
 | force_auth     | false       | Als een gebruiker al een SSO (Single Sign-On) sessie heeft op de achterliggende IDP (IDentity Provider) kan je met deze parameter aangeven dat je de gebruiker verplicht opnieuw wil laten aanmelden.     |
 | save_consent | false | Als je deze op 'true' zet, zal de authorizatie applicatie de gegeven consent onthouden voor jouw applicatie/gebruiker/scopes. |
 
+### Authentication 2.0
 
+Authentication 2.0 bied enkele extra opties aan binnen het OAuth2 login mechanisme.
 
+* Opvragen/beheren/herbruiken van sessies.
+* Het concept van Assurance levels, Dit geeft aan hoe betrouwbaar de loginmethode is.
+* Een login keuze scherm dat wordt opgebouwd op basis van toegestane login-methoden / niveaus.
 
+#### Authentication 2.0 login methodes
+
+| Naam                  | level           | beschrijving                                                    |
+| --------------------- | --------------- | --------------------------------------------------------------- |
+| iam-aprofiel-userpass | low             | aprofiel met username and password                              |
+| fas-citizen-bmid      | substantial     | Belgian Mobile ID (e.g. Itsme)                                  |
+| fas-citizen-otp       | substantial     | Authentication - one time password (e.g. sms)                   |
+| fas-citizen-totp      | substantial     | Time-based one time password (e.g. Google Authenticator)        |
+| fas-citizen-eid       | high            | Authentication eID-kaart en pin-code                            |
+
+#### Authentication 2.0 scopes
+
+| Scope                           | Alias             |
+| ------------------------------- | ----------------- |
+| astad.aprofiel.v1.address       | aprofiel.address  |
+| astad.aprofiel.v1.all           | aprofiel.all      |
+| astad.aprofiel.v1.avatar        | aprofiel.avatar   |
+| astad.aprofiel.v1.email         | aprofiel.email    |
+| astad.aprofiel.v1.name          | aprofiel.name     |
+| astad.aprofiel.v1.phone         | aprofiel.phone    |
+| astad.aprofiel.v1.username      | aprofiel.username |
+| crspersoon.birthdate            |                   |
+| crspersoon.death                |                   |
+| crspersoon.deathdate            |                   |
+| crspersoon.familyname           |                   |
+| crspersoon.gendercode           |                   |
+| crspersoon.givenName            |                   |
+| crspersoon.housenumber          |                   |
+| crspersoon.housenumberextension |                   |
+| crspersoon.municipalityname     |                   |
+| crspersoon.municipalityniscode  |                   |
+| crspersoon.nationality          |                   |
+| crspersoon.nationalnumber       |                   |
+| crspersoon.postalcode           |                   |
+| crspersoon.registrationstate    |                   |
+| crspersoon.streetname           |                   |
+
+#### Authentication 2.0 parameters
+
+base-url: https://api-oauth2.antwerpen.be/v2/authorize
+
+| Parameter                         | Verplicht     | Omschrijving                                                                                                                  |
+| :-------------------------------- |     :---:     |  :---                                                                                                                         |
+| response_type                     | true          | Voor de authorization_code flow dien je hier 'code' te gebruiken .                                                            |
+| client_id                         | true          | De client_id die je kan terugvinden bij jouw applicatie in de API store.
+| scope                             | true          | Een door komma's gescheiden lijst van scopes die de gebruiker dient goed te keuren.                                           |
+| redirect_uri                      | true          | De redirect_uri die overeenkomt met diegene die is ingegeven in de API store voor jouw applicatie.
+| auth_methods                      | true          | De toegestande login methodes (als hier maar 1methode wordt meegegeven zal het keuzescherm overgeslagen worden)               |
+| state                             | false         | We raden aan om deze parameter te voorzien in de redirect naar de authorizatie applicatie met een referentie naar de sessie van de gebruiker. Aangezien de parameter opnieuw zal worden meegeven in de redirect_uri, kan jouw applicatie valideren of de autorisatie flow gestart is vanuit jouw applicatie.     |
+| save_consent                      | false         | Als je deze op 'true' zet, zal de authorizatie applicatie de gegeven consent onthouden voor jouw applicatie/gebruiker/scopes. |
+
+#### API calls Authentication 2.0
+
+De backend api-interface met onze OAuth2 provider (binnen Digipolis gekend als de consent app) kan je op de api-store terugvinden. [documentation](https://api-store.antwerpen.be/#/org/acpaas/api/consent/v1/documentation)
+
+##### Deze bevat de mogelijkheid om:
+
+* De huidige sessie, niveau, loginmethode van een browser opvragen
+* Alle actieve sessies van een browser opvragen
+* De huidige sessie van een browser + app opvragen
+* Sessies op DA hun autenticatie server afsluiten. Als dit geprovisioneerd wordt via een externe provider (bv Vlaanderen) is het niet altijd mogelijk om deze sessie ook daar af te sluiten via enkel de API call maar is er ook een redirect flow nodig.
+
+#### Authentication 2.0 packages
+
+* [Nodejs](https://github.com/digipolisantwerp/auth_module_nodejs#authentication-20)
 
 ### OAuth2 profiel: authorization_code
 
