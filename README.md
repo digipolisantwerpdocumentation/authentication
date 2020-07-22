@@ -50,7 +50,10 @@ Voor iedere omgeving is er een aparte omgeving opgezet:
 * https://api-store-a.antwerpen.be
 * https://api-store.antwerpen.be
 
-Nadat je jouw applicatie aangemaakt hebt kan je een contract aanmaken met de A-Profiel en/of M-Profiel API.
+Nadat je jouw applicatie aangemaakt hebt kan je een contract aanmaken met de databron van je loginMethode.
+Voor authenticatie 2.0 is dit altijd de Shared Identity.
+Loginmethodes die nog niet zijn opgenomen zijn in authenticatie 2.0 hebben hun eigen databron.
+
 
 De OAuth2 client_id en client_secret kan je bij de detail gegevens van jouw applicatie vinden. Afhankelijk van de API is er nog een goedkeuring nodig van de beheerder van de API. Deze goedkeuringsflow verloopt geheel automatisch.
 
@@ -113,7 +116,7 @@ response_type=code
 
 ### Authentication 2.0
 
-Authentication 2.0 bied enkele extra opties aan binnen het OAuth2 login mechanisme.
+Authentication 2.0 biedt enkele extra opties aan binnen het OAuth2 login mechanisme.
 
 * Opvragen/beheren/herbruiken van sessies.
 * Het concept van Assurance levels, Dit geeft aan hoe betrouwbaar de loginmethode is.
@@ -166,7 +169,7 @@ base-url: https://api-oauth2.antwerpen.be/v2/authorize
 | client_id                         | true          | De client_id die je kan terugvinden bij jouw applicatie in de API store.
 | scope                             | true          | Een door komma's gescheiden lijst van scopes die de gebruiker dient goed te keuren.                                           |
 | redirect_uri                      | true          | De redirect_uri die overeenkomt met diegene die is ingegeven in de API store voor jouw applicatie.
-| auth_methods                      | true          | De toegestande login methodes (als hier maar 1methode wordt meegegeven zal het keuzescherm overgeslagen worden)               |
+| auth_methods                      | true          | De toegestane login methodes (als hier maar 1methode wordt meegegeven zal het keuzescherm overgeslagen worden)               |
 | state                             | false         | We raden aan om deze parameter te voorzien in de redirect naar de authorizatie applicatie met een referentie naar de sessie van de gebruiker. Aangezien de parameter opnieuw zal worden meegeven in de redirect_uri, kan jouw applicatie valideren of de autorisatie flow gestart is vanuit jouw applicatie.     |
 | save_consent                      | false         | Als je deze op 'true' zet, zal de authorizatie applicatie de gegeven consent onthouden voor jouw applicatie/gebruiker/scopes. |
 
@@ -179,7 +182,7 @@ De backend api-interface met onze OAuth2 provider (binnen Digipolis gekend als d
 * De huidige sessie, niveau, loginmethode van een browser opvragen
 * Alle actieve sessies van een browser opvragen
 * De huidige sessie van een browser + app opvragen
-* Sessies op DA hun autenticatie server afsluiten. Als dit geprovisioneerd wordt via een externe provider (bv Vlaanderen) is het niet altijd mogelijk om deze sessie ook daar af te sluiten via enkel de API call maar is er ook een redirect flow nodig.
+* Sessies op DA hun authenticatie server afsluiten. Als dit geprovisioneerd wordt via een externe provider (bv Vlaanderen) is het niet altijd mogelijk om deze sessie ook daar af te sluiten via enkel de API call maar is er ook een redirect flow nodig.
 
 #### Authentication 2.0 packages
 
