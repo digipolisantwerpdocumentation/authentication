@@ -4,9 +4,9 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 
-- [Document historiek](#document-historiek)
 - [OAuth2](#oauth2)
   - [Introductie](#introductie)
+  - [SAML](#saml)
   - [Registratie van de applicatie](#registratie-van-de-applicatie)
   - [Authenticeren als een applicatie](#authenticeren-als-een-applicatie)
     - [OAuth2 profiel: client_credentials](#oauth2-profiel-client_credentials)
@@ -14,6 +14,7 @@
       - [2) API oproepen](#2-api-oproepen)
   - [Authenticeren als een gebruiker](#authenticeren-als-een-gebruiker)
     - [OAuth2 authorizatie server](#oauth2-authorizatie-server)
+      - [Beschikbare scopes](#beschikbare-scopes)
     - [OAuth2 profiel: authorization_code](#oauth2-profiel-authorization_code)
       - [1) de gebruiker naar de OAuth2 authorizatie applicatie redirecten](#1-de-gebruiker-naar-de-oauth2-authorizatie-applicatie-redirecten)
       - [2) access_token bekomen](#2-access_token-bekomen)
@@ -22,7 +23,6 @@
   - [Uitloggen](#uitloggen)
   - [Het uitloggen van een gebruiker initiëren vanuit jouw applicatie](#het-uitloggen-van-een-gebruiker-initi%C3%ABren-vanuit-jouw-applicatie)
   - [De gebruiker in jouw applicatie uitloggen wanneer deze in een andere applicatie uitgelogd is](#de-gebruiker-in-jouw-applicatie-uitloggen-wanneer-deze-in-een-andere-applicatie-uitgelogd-is)
-- [SAML](#saml)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -101,7 +101,7 @@ response_type=code
 | :---         |     :---:      |  :---   |
 | response_type   | true     | Voor de authorization_code flow dien je hier 'code' te gebruiken .    |
 | client_id     | true       | De client_id die je kan terugvinden bij jouw applicatie in de API store.
-| scope     | true       | Een door komma's gescheiden lijst van scopes die de gebruiker dient goed te keuren.      |
+| scope     | true       | Een door komma's gescheiden lijst van scopes die de gebruiker dient goed te keuren. Zie [Beschikbare scopes](#beschikbare-scopes).      |
 | redirect_uri     | true       | De redirect_uri die overeenkomt met diegene die is ingegeven in de API store voor jouw applicatie.
 | redirect_uri_lng     | false       | Als deze waarde op 'true' staat zal de redirect_uri een extra parameter 'lng' hebben wanneer de gebruiker de OAuth2 authorizatie applicatie verlaat. De waarde voor de 'lng' querystring parameter zal overeenkomen met de taal op de authorizatie applicatie. |
 | service     | true       | De service die je wil gebruiken om een gebruiker te authenticeren. Dit kan 'astad.aprofiel.v1' of 'astad.mprofiel.v1' zijn.    |
@@ -110,9 +110,14 @@ response_type=code
 | force_auth     | false       | Als een gebruiker al een SSO (Single Sign-On) sessie heeft op de achterliggende IDP (IDentity Provider) kan je met deze parameter aangeven dat je de gebruiker verplicht opnieuw wil laten aanmelden.     |
 | save_consent | false | Als je deze op 'true' zet, zal de authorizatie applicatie de gegeven consent onthouden voor jouw applicatie/gebruiker/scopes. |
 
+#### Beschikbare scopes
 
+De beschikbare scopes verschillen per service.
 
+* A-Profiel (astad.aprofiel.v1): username, name, avatar, email, phone, address
+* M-Profiel (astad.mprofiel.v1): all
 
+De scopes kan je ook terugvinden in de API Store bij de API die bij de service hoort. De tooltip bij "OAuth2 Policy" onder tabblad "Plans & Policies" toont de beschikbare scopes.
 
 ### OAuth2 profiel: authorization_code
 
