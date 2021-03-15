@@ -16,6 +16,7 @@
       - [Versies](#versies)
       - [Parameters](#parameters)
       - [Beschikbare scopes](#beschikbare-scopes)
+      - [Authenticatie 2.0 login methodes (`auth_methods`)](#authenticatie-20-login-methodes-auth_methods)
     - [OAuth2 profiel: authorization_code](#oauth2-profiel-authorization_code)
       - [1) de gebruiker naar de OAuth2 authorizatie applicatie redirecten](#1-de-gebruiker-naar-de-oauth2-authorizatie-applicatie-redirecten)
       - [2) access_token bekomen](#2-access_token-bekomen)
@@ -24,6 +25,8 @@
   - [Uitloggen](#uitloggen)
     - [Het uitloggen van een gebruiker initiëren vanuit jouw applicatie](#het-uitloggen-van-een-gebruiker-initi%C3%ABren-vanuit-jouw-applicatie)
     - [De gebruiker in jouw applicatie uitloggen wanneer deze in een andere applicatie uitgelogd is](#de-gebruiker-in-jouw-applicatie-uitloggen-wanneer-deze-in-een-andere-applicatie-uitgelogd-is)
+  - [Packages](#packages)
+  - [Authenticatie 2.0 API calls](#authenticatie-20-api-calls)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -31,13 +34,13 @@
 
 ## Introductie
 
-Applicaties kunnen de OAuth2 authorizatie server gebruiken om a/m-profielen te laten authenticeren(authorization_code). Daarnaast ondersteunen we ook de mogelijkheid om applicaties te authenticeren(client_credentials). 
+Applicaties kunnen de OAuth2 authorizatie server gebruiken om a/m-profielen te laten authenticeren (authorization_code). Daarnaast ondersteunen we ook de mogelijkheid om applicaties te authenticeren (client_credentials).
 
 ## SAML
 
-Voor alle (web)applicaties raden we aan om gebruikt te maken van OAuth2. 
+Voor alle (web)applicaties raden we aan om gebruik te maken van OAuth2.
 
-Indien jouw applicatie toch gebruikt maakt van SAML kan dit alsnog opgezet worden. Gelieve hiervoor contact op te nemen met het APIe-team via Zendesk.
+Indien jouw applicatie toch gebruik maakt van SAML kan dit alsnog opgezet worden. Gelieve hiervoor contact op te nemen met het APIe-team via Zendesk.
 
 ## Registratie van de applicatie
 
@@ -52,7 +55,12 @@ Voor iedere omgeving is er een aparte omgeving opgezet:
 
 (Links naar de API Store in deze readme gaan naar de ACC omgeving.)
 
-Nadat je jouw applicatie aangemaakt hebt kan je een contract aanmaken met de [M-Profiel](https://api-store-a.antwerpen.be/#/org/astad/api/mprofiel/v1/documentation), [Shared Identity Data](https://api-store-a.antwerpen.be/#/org/acpaas/api/sharedidentitydata/v1/documentation) en/of [A-Profiel](https://api-store-a.antwerpen.be/#/org/astad/api/aprofiel/v1/documentation) [deprecated] API.
+Nadat je jouw applicatie aangemaakt hebt kan je een contract aanmaken met de databron van je login methode:
+- [M-Profiel](https://api-store-a.antwerpen.be/#/org/astad/api/mprofiel/v1/documentation) (medewerkers)
+- [Shared Identity Data](https://api-store-a.antwerpen.be/#/org/acpaas/api/sharedidentitydata/v1/documentation) (burgers)
+- [deprecated] [A-Profiel](https://api-store-a.antwerpen.be/#/org/astad/api/aprofiel/v1/documentation) (burgers)
+
+Afhankelijk van je databron dien je gebruik te maken van [Digipolis Authenticatie 1.0 of 2.0](#versies).
 
 De OAuth2 client_id en client_secret kan je bij de detail gegevens van jouw applicatie vinden. Afhankelijk van de API is er nog een goedkeuring nodig van de beheerder van de API. Deze goedkeuringsflow verloopt geheel automatisch.
 
@@ -114,10 +122,16 @@ Authorize endpoint: `/v1/authorize`
 
 **Authenticatie 2.0**
 
-Digipolis Authenticatie 2.0 ondersteunt bijkomende parameters `auth_methods` en `minimal_assurance_level` die het mogelijk maken om de gewenste login methode te sturen. Deze versie kan je gebruiken voor authenticatie van **burgers** in combinatie met de Shared Identity Data v1 API om het profiel op te halen.
+Digipolis Authenticatie 2.0 biedt enkele extra opties aan binnen het OAuth2 login mechanisme:
+
+* Opvragen/beheren/herbruiken van sessies.
+* Het concept van assurance levels: dit geeft aan hoe betrouwbaar de loginmethode is (`minimal_assurance_level` querystring parameter).
+* Een login keuze scherm dat wordt opgebouwd op basis van toegestane login methodes / niveaus (`auth_methods` querystring parameter).
+
+Deze versie kan je gebruiken voor authenticatie van **burgers** in combinatie met de Shared Identity Data v1 API om het profiel op te halen.
 
 Authorize endpoint: `/v2/authorize` \
-Documentation: https://acpaas.digipolis.be/nl/docs/identiteit-authenticatie-en-autorisatie
+Documentatie: https://acpaas.digipolis.be/nl/docs/identiteit-authenticatie-en-autorisatie
 
 #### Parameters
 
@@ -129,7 +143,7 @@ Documentation: https://acpaas.digipolis.be/nl/docs/identiteit-authenticatie-en-a
 | redirect_uri            | ✓  | ✓  |     ✓     | De redirect_uri die overeenkomt met diegene die is ingegeven in de API store voor jouw applicatie.                                                                                                                                                                                                           |
 | redirect_uri_lng        | ✓  | ✓  |           | Als deze waarde op 'true' staat zal de redirect_uri een extra parameter 'lng' hebben wanneer de gebruiker de OAuth2 authorizatie applicatie verlaat. De waarde voor de 'lng' querystring parameter zal overeenkomen met de taal op de authorizatie applicatie.                                               |
 | service                 | ✓  |    |     ✓     | De service die je wil gebruiken om een gebruiker te authenticeren. Dit kan "astad.mprofiel.v1" of "astad.aprofiel.v1" [deprecated] zijn.                                                                                                                                                                     |
-| auth_methods            |    | ✓  |     ✓     | De authenticatie methodes voor Digipolis Authenticatie 2.0 (komma gescheiden). Bv. "fas-hintedlogin-bmid,fas-hintedlogin-eid".                                                                                                                                                                               |
+| auth_methods            |    | ✓  |     ✓     | De authenticatie methodes voor Digipolis Authenticatie 2.0 (komma gescheiden). Bv. "fas-hintedlogin-bmid,fas-hintedlogin-eid".  Als er maar één methode wordt meegegeven zal het keuzescherm overgeslagen worden. Zie [login methodes](#authenticatie-20-login-methodes-auth_methods)                        |
 | minimal_assurance_level |    | ✓  |     ✓     | Het minimale authenticatie betrouwbaarheidsniveau, nl. hoe sterk een gebruiker zijn identiteit minimaal dient aan te tonen a.d.h.v. een bepaalde authenticatiemethode alvorens zich succesvol te kunnen aanmelden. Bv. "low".                                                                                |
 | state                   | ✓  | ✓  |           | We raden aan om deze parameter te voorzien in de redirect naar de authorizatie applicatie met een referentie naar de sessie van de gebruiker. Aangezien de parameter opnieuw zal worden meegeven in de redirect_uri, kan jouw applicatie valideren of de autorisatie flow gestart is vanuit jouw applicatie. |
 | lng                     | ✓  | ✓  |           | De taal voor de authorizatie applicatie. Standaard staat deze op 'nl'. Beschikbare talen zijn nl, fr, en, de.                                                                                                                                                                                                |
@@ -146,6 +160,17 @@ De beschikbare scopes verschillen per service.
 
 De scopes kan je ook terugvinden in de API Store bij de API die bij de service hoort. De tooltip bij "OAuth2 Policy" onder tabblad "Plans & Policies" toont de beschikbare scopes.
 
+
+#### Authenticatie 2.0 login methodes (`auth_methods`)
+
+| Naam                  | Level       | Beschrijving                                            |
+|-----------------------|-------------|---------------------------------------------------------|
+| iam-aprofiel-userpass | low         | A-Profiel met username en paswoord                      |
+| fas-citizen-bmid      | substantial | Belgian Mobile ID (bv. itsme)                           |
+| fas-citizen-otp       | substantial | One time password (bv. sms)                             |
+| fas-citizen-totp      | substantial | Time-based one time password (bv. Google Authenticator) |
+| fas-citizen-eid       | high        | eID-kaart en pincode                                    |
+
 ### OAuth2 profiel: authorization_code
 
 ![](img/authorization_code.png)
@@ -154,13 +179,12 @@ Als je **medewerkers** in je applicatie wilt laten inloggen en gegevens over dez
 
 Voor **burgers** is een contract nodig met de [Shared Identity Data API](https://api-store-a.antwerpen.be/#/org/acpaas/api/sharedidentitydata/v1/documentation) (die achterliggend gebruik maakt van A-Profiel) of de [AProfiel v1 API](https://api-store-a.antwerpen.be/#/org/astad/api/aprofiel/v1/documentation) [deprecated].
 
-Technische implementatie details en een werkende NodeJS demo applicatie kan je hier vinden:
+Technische implementatie details en een werkende Node.js demo applicatie kan je hier vinden:
 https://github.com/digipolisantwerp/demo-oauth2-consumer_app_nodejs
 
 #### 1) de gebruiker naar de OAuth2 authorizatie applicatie redirecten
 
 Een authorization_code kan je bekomen door de gebruiker naar de OAuth2 authorizatie applicatie te redirecten.
-
 
 #### 2) access_token bekomen
 
@@ -233,3 +257,19 @@ Het bericht ziet er als volgt uit:
   timestamp: <ISO datum en tijd>
 }
 ```
+
+## Packages
+
+* [Node.js: @digipolis/auth](https://github.com/digipolisantwerp/auth_module_nodejs)
+* [.NET: Auth toolbox](https://bitbucket.antwerpen.be/projects/ASPNET/repos/auth_toolbox/browse)
+
+## Authenticatie 2.0 API calls
+
+De backend API-interface met onze OAuth2 provider (binnen Digipolis gekend als de consent app) is beschikbaar via de [Consent API](https://api-store-a.antwerpen.be/#/org/acpaas/api/consent/v1/documentation) op de API Store.
+
+Deze bevat de volgende mogelijkheden:
+
+* De huidige sessie, niveau, loginmethode van een browser opvragen.
+* Alle actieve sessies van een browser opvragen.
+* De huidige sessie van een browser en applicatie opvragen.
+* Login sessies van een gebruiker afsluiten.
