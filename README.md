@@ -149,6 +149,7 @@ Documentatie: https://acpaas.digipolis.be/nl/docs/identiteit-authenticatie-en-au
 | lng                     | ✓  | ✓  |           | De taal voor de authorizatie applicatie. Standaard staat deze op 'nl'. Beschikbare talen zijn nl, fr, en, de.                                                                                                                                                                                                |
 | force_auth              | ✓  | ✓  |           | Als een gebruiker al een SSO (Single Sign-On) sessie heeft op de achterliggende IDP (IDentity Provider) kan je met deze parameter aangeven dat je de gebruiker verplicht opnieuw wil laten aanmelden.                                                                                                        |
 | save_consent            | ✓  | ✓  |           | Als je deze op 'true' zet, zal de authorizatie applicatie de gegeven consent onthouden voor jouw applicatie/gebruiker/scopes.                                                                                                                                                                                |
+| consent_required        | ✓  | ✓  |           | Als je deze op 'false' zet, zal de authorizatie doorgaan zonder userdata als de gebruiker consent niet aanvaardt (enkel beschikbaar in consent2.0).                                                                                                                                                                     |
 
 #### Beschikbare scopes
 
